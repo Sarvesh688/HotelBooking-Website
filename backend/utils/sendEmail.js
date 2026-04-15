@@ -1,16 +1,37 @@
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  },
-  connectionTimeout: 5000,
-  socketTimeout: 5000
-});
+// Lazy initialization - creates transporter only when needed
+let transporter = null;
+
+const getTransporter = () => {
+  if (transporter) return transporter;
+  
+  // Validate required environment variables
+  if (!process.env.EMAIL_USER) {
+    throw new Error('❌ EMAIL_USER environment variable not set');
+  }
+  if (!process.env.EMAIL_PASS) {
+    throw new Error('❌ EMAIL_PASS environment variable not set (must be Gmail App Password, not your login password)');
+  }
+  
+  transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    },
+    connectionTimeout: 10000, // 10 seconds
+    socketTimeout: 10000,
+    pool: {
+      maxConnections: 5,
+      maxMessages: 10
+    }
+  });
+  
+  return transporter;
+};
 
 const sendBookingConfirmationEmail = async (booking, room, isForOwner = false) => {
   const checkInDate = new Date(booking.checkIn).toLocaleDateString('en-IN');
@@ -77,12 +98,13 @@ const sendBookingConfirmationEmail = async (booking, room, isForOwner = false) =
     html: isForOwner ? ownerHtml : guestHtml
   };
   
-  await transporter.sendMail(mailOptions);
+  const mailTransporter = getTransporter();
+  await mailTransporter.sendMail(mailOptions);
   
   // Also send to owner if sending to guest
   if (!isForOwner) {
     const ownerMailOptions = { ...mailOptions, to: process.env.OWNER_EMAIL, subject: 'New Booking Alert - Hotel Sachida Palace', html: ownerHtml };
-    await transporter.sendMail(ownerMailOptions);
+    await mailTransporter.sendMail(ownerMailOptions);
   }
 };
 

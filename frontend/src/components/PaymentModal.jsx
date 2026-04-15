@@ -85,7 +85,7 @@ const PaymentModal = ({ isOpen, onClose, orderDetails, onSuccess }) => {
               <p><span className="text-gray-600">Check-out:</span> {orderDetails.checkOut}</p>
               <p><span className="text-gray-600">Guests:</span> {orderDetails.guests}</p>
               <p><span className="text-gray-600">Nights:</span> {orderDetails.nights}</p>
-              <p className="text-lg font-bold text-primary mt-2">Total: ₹{orderDetails.amount}</p>
+              <p className="text-lg font-bold text-primary mt-2">Total: ₹{orderDetails.amountDisplay || orderDetails.amount / 100}</p>
             </div>
           </div>
           

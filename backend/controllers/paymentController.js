@@ -83,6 +83,7 @@ const createOrder = async (req, res) => {
 
 const verifyPayment = async (req, res) => {
   try {
+    console.log('📝 Verify payment called with:', req.body);
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, bookingId } = req.body;
     
     const body = razorpay_order_id + '|' + razorpay_payment_id;
@@ -123,6 +124,8 @@ const verifyPayment = async (req, res) => {
     booking.razorpaySignature = razorpay_signature;
     booking.paymentId = razorpay_payment_id;
     await booking.save();
+    console.log('✅ Booking saved with status: confirmed');
+    console.log('📊 Booking ID:', booking._id);
     
     const room = await Room.findById(booking.roomType);
     

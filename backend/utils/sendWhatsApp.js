@@ -1,6 +1,25 @@
 const twilio = require('twilio');
 
-const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+// Lazy initialization - creates client only when needed
+let client = null;
+
+const getClient = () => {
+  if (client) return client;
+  
+  // Validate required environment variables
+  if (!process.env.TWILIO_SID) {
+    throw new Error('❌ TWILIO_SID environment variable not set');
+  }
+  if (!process.env.TWILIO_AUTH_TOKEN) {
+    throw new Error('❌ TWILIO_AUTH_TOKEN environment variable not set');
+  }
+  if (!process.env.TWILIO_WHATSAPP_FROM) {
+    throw new Error('❌ TWILIO_WHATSAPP_FROM environment variable not set (must be whatsapp:+14155238886 for sandbox)');
+  }
+  
+  client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+  return client;
+};
 
 // Helper function to format phone number to international format
 const formatPhoneNumber = (phone) => {
@@ -37,7 +56,8 @@ Thank you for choosing Hotel Sachida Palace! 🎉`;
 
     const formattedNumber = formatPhoneNumber(toNumber);
     
-    await client.messages.create({
+    const whatsappClient = getClient();
+    await whatsappClient.messages.create({
       body: message,
       from: process.env.TWILIO_WHATSAPP_FROM,
       to: `whatsapp:${formattedNumber}`
@@ -71,7 +91,8 @@ Please prepare the room for the guest.`;
 
     const formattedOwnerNumber = formatPhoneNumber(process.env.OWNER_WHATSAPP);
 
-    await client.messages.create({
+    const whatsappClient = getClient();
+    await whatsappClient.messages.create({
       body: message,
       from: process.env.TWILIO_WHATSAPP_FROM,
       to: `whatsapp:${formattedOwnerNumber}`

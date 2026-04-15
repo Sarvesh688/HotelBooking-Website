@@ -92,7 +92,8 @@ const BookingForm = ({ room, onSuccess }) => {
       
       setOrderDetails({
         orderId,
-        amount: amount / 100, // Razorpay amount is in paise
+        amount: amount, // Keep in paise for Razorpay (backend returns paise)
+        amountDisplay: amount / 100, // For showing ₹ in UI
         bookingId,
         keyId,
         roomName: room.name,
