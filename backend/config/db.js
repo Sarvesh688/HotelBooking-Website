@@ -7,6 +7,15 @@ const connectDB = async () => {
       useUnifiedTopology: true,
     });
     console.log('MongoDB Connected Successfully');
+
+    // Drop the old broken TTL index on Booking collection if it exists
+    try {
+      const Booking = require('../models/Booking');
+      await Booking.collection.dropIndex('createdAt_1');
+      console.log('Dropped old TTL index on Booking.createdAt');
+    } catch (e) {
+      // Index doesn't exist — that's fine
+    }
     
     // Seed initial rooms if none exist
     const Room = require('../models/Room');

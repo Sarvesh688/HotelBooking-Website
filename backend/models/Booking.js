@@ -65,7 +65,7 @@ const bookingSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Index for TTL cleanup of pending bookings older than 30 minutes
-bookingSchema.index({ createdAt: 1 }, { expireAfterSeconds: 1800, partialFilterExpression: { status: 'pending' } });
+bookingSchema.index({ status: 1 });
+bookingSchema.index({ checkIn: 1, checkOut: 1 });
 
 module.exports = mongoose.model('Booking', bookingSchema);

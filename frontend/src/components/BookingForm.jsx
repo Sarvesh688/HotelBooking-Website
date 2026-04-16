@@ -6,8 +6,13 @@ import toast from 'react-hot-toast';
 import PaymentModal from './PaymentModal';
 
 const BookingForm = ({ room, onSuccess }) => {
-  const [checkIn, setCheckIn] = useState(new Date());
-  const [checkOut, setCheckOut] = useState(new Date(new Date().setDate(new Date().getDate() + 1)));
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  const [checkIn, setCheckIn] = useState(today);
+  const [checkOut, setCheckOut] = useState(tomorrow);
   const [guestName, setGuestName] = useState('');
   const [guestEmail, setGuestEmail] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
@@ -54,6 +59,13 @@ const BookingForm = ({ room, onSuccess }) => {
 
   useEffect(() => {
     if (checkIn && checkOut && room) {
+      // If checkOut is same or before checkIn, push it forward by 1 day
+      if (checkOut <= checkIn) {
+        const next = new Date(checkIn);
+        next.setDate(next.getDate() + 1);
+        setCheckOut(next);
+        return;
+      }
       checkAvailability();
     }
   }, [checkIn, checkOut, quantity]);
@@ -71,6 +83,7 @@ const BookingForm = ({ room, onSuccess }) => {
     
     setLoading(true);
     try {
+      console.log('🔄 Creating order with:', { roomId: room._id, checkIn, checkOut, guestName, guestEmail, guestPhone, totalAdults, totalChildren, quantity });
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/payment/create-order`, {
         roomId: room._id,
         checkIn: checkIn.toISOString(),
@@ -82,6 +95,7 @@ const BookingForm = ({ room, onSuccess }) => {
         totalChildren,
         quantity
       });
+      console.log('✅ Order created:', response.data);
       
       const { orderId, amount, bookingId, keyId } = response.data;
       
@@ -110,6 +124,7 @@ const BookingForm = ({ room, onSuccess }) => {
       
       setShowPaymentModal(true);
     } catch (error) {
+      console.error('❌ Payment init error:', error.response?.status, error.response?.data || error.message);
       toast.error(error.response?.data?.message || 'Payment initialization failed');
     } finally {
       setLoading(false);
@@ -118,12 +133,14 @@ const BookingForm = ({ room, onSuccess }) => {
 
   const handlePaymentSuccess = async (paymentResponse) => {
     try {
+      console.log('🔄 Verifying payment:', paymentResponse);
       const verifyResponse = await axios.post(`${import.meta.env.VITE_API_URL}/payment/verify-payment`, {
         razorpay_order_id: paymentResponse.razorpay_order_id,
         razorpay_payment_id: paymentResponse.razorpay_payment_id,
         razorpay_signature: paymentResponse.razorpay_signature,
         bookingId: paymentResponse.bookingId
       });
+      console.log('✅ Verify response:', verifyResponse.data);
       
       if (verifyResponse.data.success) {
         toast.success('Booking confirmed successfully!');
@@ -132,6 +149,7 @@ const BookingForm = ({ room, onSuccess }) => {
         toast.error('Payment verification failed');
       }
     } catch (error) {
+      console.error('❌ Verify error:', error.response?.status, error.response?.data || error.message);
       toast.error(error.response?.data?.message || 'Verification failed');
     }
   };
@@ -146,7 +164,7 @@ const BookingForm = ({ room, onSuccess }) => {
             <label className="block text-gray-700 mb-2">Check-in Date</label>
             <DatePicker
               selected={checkIn}
-              onChange={setCheckIn}
+              onChange={(date) => { date.setHours(0,0,0,0); setCheckIn(date); }}
               minDate={new Date()}
               className="w-full p-3 border rounded-lg"
               dateFormat="dd/MM/yyyy"
@@ -157,8 +175,8 @@ const BookingForm = ({ room, onSuccess }) => {
             <label className="block text-gray-700 mb-2">Check-out Date</label>
             <DatePicker
               selected={checkOut}
-              onChange={setCheckOut}
-              minDate={checkIn}
+              onChange={(date) => { date.setHours(0,0,0,0); setCheckOut(date); }}
+              minDate={checkIn ? new Date(checkIn.getTime() + 86400000) : new Date()}
               className="w-full p-3 border rounded-lg"
               dateFormat="dd/MM/yyyy"
             />
