@@ -22,7 +22,7 @@ const PaymentModal = ({ isOpen, onClose, orderDetails, onSuccess }) => {
       return;
     }
 
-    const { orderId, amount, bookingId, keyId } = orderDetails;
+    const { orderId, amount, keyId } = orderDetails;
 
     const rzp = new window.Razorpay({
       key: keyId,
@@ -30,7 +30,7 @@ const PaymentModal = ({ isOpen, onClose, orderDetails, onSuccess }) => {
       currency: 'INR',
       order_id: orderId,
       name: 'Hotel Sachida Palace',
-      description: `Booking #${bookingId.slice(-8)}`,
+      description: 'Hotel Room Booking',
       prefill: orderDetails.prefill,
       theme: { color: '#b8860b' },
       handler: function (response) {
@@ -40,7 +40,6 @@ const PaymentModal = ({ isOpen, onClose, orderDetails, onSuccess }) => {
           razorpay_order_id: response.razorpay_order_id,
           razorpay_payment_id: response.razorpay_payment_id,
           razorpay_signature: response.razorpay_signature,
-          bookingId,
         });
       },
       modal: {

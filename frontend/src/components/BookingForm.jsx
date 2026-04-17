@@ -83,7 +83,6 @@ const BookingForm = ({ room, onSuccess }) => {
     
     setLoading(true);
     try {
-      console.log('🔄 Creating order with:', { roomId: room._id, checkIn, checkOut, guestName, guestEmail, guestPhone, totalAdults, totalChildren, quantity });
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/payment/create-order`, {
         roomId: room._id,
         checkIn: checkIn.toISOString(),
@@ -95,9 +94,7 @@ const BookingForm = ({ room, onSuccess }) => {
         totalChildren,
         quantity
       });
-      console.log('✅ Order created:', response.data);
-      
-      const { orderId, amount, bookingId, keyId } = response.data;
+      const { orderId, amount, keyId } = response.data;
       
       // Format dates for display
       const formattedCheckIn = checkIn.toLocaleDateString('en-IN');
@@ -106,9 +103,8 @@ const BookingForm = ({ room, onSuccess }) => {
       
       setOrderDetails({
         orderId,
-        amount: amount, // Keep in paise for Razorpay (backend returns paise)
-        amountDisplay: amount / 100, // For showing ₹ in UI
-        bookingId,
+        amount: amount,
+        amountDisplay: amount / 100,
         keyId,
         roomName: room.name,
         checkIn: formattedCheckIn,
@@ -133,15 +129,11 @@ const BookingForm = ({ room, onSuccess }) => {
 
   const handlePaymentSuccess = async (paymentResponse) => {
     try {
-      console.log('🔄 Verifying payment:', paymentResponse);
       const verifyResponse = await axios.post(`${import.meta.env.VITE_API_URL}/payment/verify-payment`, {
         razorpay_order_id: paymentResponse.razorpay_order_id,
         razorpay_payment_id: paymentResponse.razorpay_payment_id,
         razorpay_signature: paymentResponse.razorpay_signature,
-        bookingId: paymentResponse.bookingId
       });
-      console.log('✅ Verify response:', verifyResponse.data);
-      
       if (verifyResponse.data.success) {
         toast.success('Booking confirmed successfully!');
         onSuccess && onSuccess(verifyResponse.data.bookingId);
@@ -183,13 +175,28 @@ const BookingForm = ({ room, onSuccess }) => {
           </div>
           
           <div>
-            <label className="block text-gray-700 mb-2">Number of Rooms</label>
+            <label className="block text-gray-700 mb-2">Number of Rooms
+              {availability?.availableRooms !== undefined && (
+                <span className="ml-2 text-sm font-normal text-gray-500">
+                  ({availability.availableRooms} available for selected dates)
+                </span>
+              )}
+            </label>
             <input
               type="number"
               min="1"
-              max="5"
+              max={availability?.availableRooms || 10}
               value={quantity}
-              onChange={(e) => setQuantity(parseInt(e.target.value))}
+              onChange={(e) => {
+                const val = parseInt(e.target.value) || 1;
+                const maxAllowed = availability?.availableRooms || 10;
+                if (val > maxAllowed) {
+                  toast.error(`Only ${maxAllowed} room(s) available for selected dates`);
+                  setQuantity(maxAllowed);
+                } else {
+                  setQuantity(val);
+                }
+              }}
               className="w-full p-3 border rounded-lg"
             />
           </div>
@@ -254,13 +261,18 @@ const BookingForm = ({ room, onSuccess }) => {
           
           {availability && (
             <div className={`p-4 rounded-lg ${availability.available ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
-              <p className={availability.available ? 'text-green-700' : 'text-red-700'}>
-                {availability.message}
+              <p className={`font-medium ${availability.available ? 'text-green-700' : 'text-red-700'}`}>
+                {availability.available
+                  ? `✅ ${availability.availableRooms} room(s) available for selected dates`
+                  : `❌ ${availability.availableRooms > 0
+                      ? `Only ${availability.availableRooms} room(s) available — you requested ${quantity}`
+                      : 'No rooms available for selected dates'}`
+                }
               </p>
               {availability.available && priceDetails && (
-                <div className="mt-2">
-                  <p className="text-lg font-bold">Total: ₹{priceDetails.totalPrice}</p>
-                  <p className="text-sm text-gray-600">For {priceDetails.nights} nights</p>
+                <div className="mt-2 pt-2 border-t border-green-200">
+                  <p className="text-lg font-bold text-gray-800">Total: ₹{priceDetails.totalPrice.toLocaleString()}</p>
+                  <p className="text-sm text-gray-600">{quantity} room(s) × {priceDetails.nights} night(s)</p>
                 </div>
               )}
             </div>
