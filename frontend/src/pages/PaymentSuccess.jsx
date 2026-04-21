@@ -9,7 +9,7 @@ const PaymentSuccess = () => {
   const whatsappMessage = encodeURIComponent(
     `Hello Hotel Sachida Palace,\n\nI have completed my booking.\nBooking ID: ${bookingId}\n\nPlease confirm my reservation. Thank you!`
   );
-  const whatsappUrl = `https://wa.me/919897468711?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/919997337702?text=${whatsappMessage}`;
 
   return (
     <div className="container mx-auto px-4 py-20">

@@ -79,7 +79,7 @@ const AdminLogin = () => {
         </form>
         
         <div className="mt-6 text-center text-sm text-gray-500">
-          <p>Contact owner for credentials: 7300865774</p>
+          <p>Contact owner for credentials: 9997337702</p>
         </div>
       </div>
     </div>
