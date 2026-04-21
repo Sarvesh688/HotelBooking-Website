@@ -19,7 +19,9 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-4">Contact Info</h3>
             <div className="space-y-2">
               <p className="flex items-center"><FaPhone className="mr-2 text-primary" /> 9897468711 / 9997337702</p>
-              <p className="flex items-center"><FaEnvelope className="mr-2 text-primary" /> sachidapalace@gmail.com</p>
+              <a href="mailto:hotelsachidapalace@gmail.com" className="flex items-center hover:text-primary transition">
+                <FaEnvelope className="mr-2 text-primary" /> hotelsachidapalace@gmail.com
+              </a>
               <p className="flex items-center"><FaMapMarkerAlt className="mr-2 text-primary" /> Gabni Gawn, Chandrapuri, Rudraprayag NH-107</p>
             </div>
           </div>
