@@ -2,5 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /api/
+Disallow: /booking
+Disallow: /payment-success
 
 Sitemap: https://hotelsachidapalace.com/sitemap.xml

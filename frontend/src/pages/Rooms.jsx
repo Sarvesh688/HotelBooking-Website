@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Helmet } from 'react-helmet-async';
 import RoomCard from '../components/RoomCard';
 import toast from 'react-hot-toast';
 
@@ -44,6 +45,11 @@ const Rooms = () => {
 
   return (
     <div className="container mx-auto px-4 py-12">
+      <Helmet>
+        <title>Rooms & Rates | Hotel Sachida Palace Rudraprayag</title>
+        <meta name="description" content="Browse Double Bed, Triple Bed and Family Suite rooms at Hotel Sachida Palace, Rudraprayag. All rooms with attached bathroom and geyser. Book online instantly." />
+        <link rel="canonical" href="https://hotelsachidapalace.com/rooms" />
+      </Helmet>
       <h1 className="text-4xl font-bold text-center mb-4">Our Rooms</h1>
       <p className="text-center text-gray-600 mb-12">Choose the perfect room for your stay</p>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

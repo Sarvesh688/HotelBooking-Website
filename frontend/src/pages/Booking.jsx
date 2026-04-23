@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import BookingForm from '../components/BookingForm';
 import Loader from '../components/Loader';
@@ -36,6 +37,11 @@ const Booking = () => {
 
   return (
     <div className="container mx-auto px-4 py-12">
+      <Helmet>
+        <title>Book {room.name} | Hotel Sachida Palace Rudraprayag</title>
+        <meta name="description" content={`Book ${room.name} at Hotel Sachida Palace, Rudraprayag. ${room.description || 'Comfortable stay with attached bathroom and geyser.'}`} />
+        <meta name="robots" content="noindex, follow" />
+      </Helmet>
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <img src={room.imageUrl} alt={room.name} className="w-full rounded-xl shadow-lg" />

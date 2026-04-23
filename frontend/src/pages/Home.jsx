@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { FaPhone, FaMapMarkerAlt, FaCheckCircle, FaTimes } from 'react-icons/fa';
 
 // Hotel images
@@ -39,6 +40,12 @@ const Home = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Hotel Sachida Palace | Book Rooms Online | Rudraprayag</title>
+        <meta name="description" content="Affordable hotel in Rudraprayag, Uttarakhand. Book Double, Triple or Family rooms online with secure payments and instant confirmation." />
+        <link rel="canonical" href="https://hotelsachidapalace.com/" />
+      </Helmet>
+
       {/* Hero Section */}
       <div className="relative h-[500px] overflow-hidden">
         <img
