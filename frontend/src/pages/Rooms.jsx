@@ -46,8 +46,8 @@ const Rooms = () => {
   return (
     <div className="container mx-auto px-4 py-12">
       <Helmet>
-        <title>Rooms & Rates | Hotel Sachida Palace Rudraprayag</title>
-        <meta name="description" content="Browse Double Bed, Triple Bed and Family Suite rooms at Hotel Sachida Palace, Rudraprayag. All rooms with attached bathroom and geyser. Book online instantly." />
+        <title>Premium Rooms at Best Hotel in Chandrapuri, Rudraprayag</title>
+        <meta name="description" content="Discover our luxury double and family rooms at Hotel Sachida Palace, the best hotel in Chandrapuri, Rudraprayag. Book online for the best rates and premium service." />
         <link rel="canonical" href="https://hotelsachidapalace.com/rooms" />
       </Helmet>
       <h1 className="text-4xl font-bold text-center mb-4">Our Rooms</h1>

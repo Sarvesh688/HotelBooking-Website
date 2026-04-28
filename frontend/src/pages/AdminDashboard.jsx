@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import Loader from '../components/Loader';
 // Remove unused imports - FaCheck, FaTimes not needed since we only have delete now
 import { FaSignOutAlt, FaRupeeSign, FaCalendarAlt, FaBed, FaEdit, FaSave, FaTrash } from 'react-icons/fa';
+import { Helmet } from 'react-helmet-async';
 
 const AdminDashboard = () => {
   const [bookings, setBookings] = useState([]);
@@ -76,6 +77,9 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
+      <Helmet>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       {/* Header */}
       <div className="bg-gray-800 text-white px-6 py-4 flex justify-between items-center">
         <h1 className="text-xl font-bold">🏨 Hotel Sachida Palace — Admin</h1>

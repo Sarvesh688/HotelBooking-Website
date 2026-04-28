@@ -41,22 +41,49 @@ const Home = () => {
   return (
     <div>
       <Helmet>
-        <title>Hotel Sachida Palace | Book Rooms Online | Rudraprayag</title>
-        <meta name="description" content="Affordable hotel in Rudraprayag, Uttarakhand. Book Double, Triple or Family rooms online with secure payments and instant confirmation." />
+        <title>Best Hotel in Chandrapuri, Rudraprayag | Hotel Sachida Palace</title>
+        <meta name="description" content="Experience the best stay at Hotel Sachida Palace, the top-rated hotel in Chandrapuri, Rudraprayag. Affordable luxury rooms with stunning views and modern amenities." />
         <link rel="canonical" href="https://hotelsachidapalace.com/" />
+        <script type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "Hotel",
+              "name": "Hotel Sachida Palace",
+              "description": "Best hotel in Chandrapuri, Rudraprayag, Uttarakhand. Offering premium rooms with modern amenities.",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Gabni Gawn, Chandrapuri",
+                "addressLocality": "Rudraprayag",
+                "addressRegion": "Uttarakhand",
+                "postalCode": "246425",
+                "addressCountry": "IN"
+              },
+              "telephone": "+91-9897468711",
+              "url": "https://hotelsachidapalace.com/",
+              "image": "https://hotelsachidapalace.com/src/assets/images/hotel/hotel.jpeg",
+              "priceRange": "₹2000 - ₹4500",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "30.47694",
+                "longitude": "79.37046"
+              }
+            }
+          `}
+        </script>
       </Helmet>
 
       {/* Hero Section */}
       <div className="relative h-[500px] overflow-hidden">
         <img
           src={hotelImg1}
-          alt="Hotel Sachida Palace"
+          alt="Best Hotel in Chandrapuri Rudraprayag - Hotel Sachida Palace Exterior"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center items-center text-center text-white">
-          <h1 className="text-5xl font-bold mb-4">Welcome to Hotel Sachida Palace</h1>
-          <p className="text-xl mb-8">Your Home Away from Home in Rudraprayag</p>
+          <h1 className="text-5xl font-bold mb-4">Best Hotel in Chandrapuri, Rudraprayag</h1>
+          <p className="text-xl mb-8">Welcome to Hotel Sachida Palace - Your Home in Uttarakhand</p>
           <Link to="/rooms" className="bg-primary px-8 py-3 rounded-lg text-lg hover:bg-secondary transition">
             View Rooms &amp; Book Now
           </Link>

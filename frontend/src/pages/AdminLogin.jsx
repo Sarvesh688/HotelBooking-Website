@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FaHotel, FaEnvelope, FaLock } from 'react-icons/fa';
+import { Helmet } from 'react-helmet-async';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -31,6 +32,9 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12">
+      <Helmet>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full">
         <div className="text-center mb-8">
           <FaHotel className="text-primary text-4xl mx-auto mb-2" />
